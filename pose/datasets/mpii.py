@@ -43,7 +43,8 @@ class Mpii(data.Dataset):
         self.lsp_img_folder = './data/lsp'
         self.h36m_jsonfile = './data/lsp/H36M_annotations.json'
         with open(self.h36m_jsonfile) as anno_file:
-            self.anno.extend(json.load(anno_file))
+            self.h36m_anno = json.load(anno_file)
+            self.anno.extend(self.h36m_anno)
 
         for idx, val in enumerate(self.h36m_anno):
             if val['isValidation'] != True and len(self.train_list) < 2 * self.mpii_train_num:

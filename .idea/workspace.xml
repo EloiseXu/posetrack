@@ -2,12 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="44fbb4dd-f6c5-4c3a-b0da-a3634db4d20d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/example/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/example/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/example/trainer.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/miscc/config.py" beforeDir="false" afterPath="$PROJECT_DIR$/miscc/config.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/miscc/losses.py" beforeDir="false" afterPath="$PROJECT_DIR$/miscc/losses.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pose/datasets/mpii.py" beforeDir="false" afterPath="$PROJECT_DIR$/pose/datasets/mpii.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -32,8 +27,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/miscc/losses.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="990">
-              <caret line="66" column="39" lean-forward="true" selection-start-line="66" selection-start-column="39" selection-end-line="66" selection-end-column="39" />
+            <state relative-caret-position="-25">
+              <caret line="24" column="42" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="42" />
               <folding>
                 <element signature="e#0#12#0" expanded="true" />
               </folding>
@@ -205,15 +200,15 @@
       <workItem from="1552085985409" duration="135000" />
       <workItem from="1552086121802" duration="2430000" />
       <workItem from="1552140958342" duration="26802000" />
-      <workItem from="1552221520991" duration="11318000" />
+      <workItem from="1552221520991" duration="11658000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="40685000" />
+    <option name="totallyTimeSpent" value="41025000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="65" y="-4" width="1301" height="772" extended-state="7" />
+    <frame x="65" y="-4" width="1301" height="772" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17848605" />
@@ -430,8 +425,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/miscc/losses.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="990">
-          <caret line="66" column="39" lean-forward="true" selection-start-line="66" selection-start-column="39" selection-end-line="66" selection-end-column="39" />
+        <state relative-caret-position="-25">
+          <caret line="24" column="42" selection-start-line="24" selection-start-column="42" selection-end-line="24" selection-end-column="42" />
           <folding>
             <element signature="e#0#12#0" expanded="true" />
           </folding>

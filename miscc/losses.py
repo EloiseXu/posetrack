@@ -22,6 +22,8 @@ def discriminator_loss(netD, real_maps, masks, fake_maps, conditions, real_label
     cond_wrong_logits = netD.COND_DNET(real_features[:(batch_size - 1)], conditions[1:batch_size])
     cond_wrong_errD = nn.BCELoss()(cond_wrong_logits, fake_labels[1:batch_size])
 
+    real_features = netD.DOMAIN(real_maps)
+
     if netD.UNCOND_DNET is not None:
         real_logits = netD.UNCOND_DNET(real_features)
         fake_logits = netD.UNCOND_DNET(fake_features)
@@ -30,7 +32,7 @@ def discriminator_loss(netD, real_maps, masks, fake_maps, conditions, real_label
 
         domain_errD = 0
         if cfg.TRAIN.DOMAIN == True:
-            domain_logits = netD.UNCOND_DNET(real_features)
+            domain_logits = netD.DOMAIN_DNET(real_features)
             domain_errD = nn.BCELoss()(domain_logits, domain_labels)
         errD = ((real_errD + cond_real_errD) / 2. +
                 (fake_errD + cond_wrong_errD) / 2.) + domain_errD

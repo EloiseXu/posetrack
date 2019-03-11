@@ -157,7 +157,11 @@ class Mpii(data.Dataset):
         meta = {'index' : index, 'center' : c, 'scale' : s,
         'pts' : pts, 'tpts' : tpts, 'target_weight': target_weight}
 
-        return inp, target, meta
+        mpii = 0
+        if index < num_mpii:
+            mpii = 1
+
+        return inp, target, meta, mpii
 
     def __len__(self):
         if self.is_train:

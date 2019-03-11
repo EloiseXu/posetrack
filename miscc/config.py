@@ -18,6 +18,7 @@ __C.TRAIN.DISCRIMINATOR_LR = 2e-4
 __C.TRAIN.GENERATOR_LR = 2e-4
 __C.TRAIN.NET_G = ''
 __C.TRAIN.B_NET_D = True
+__C.TRAIN.DOMAIN = False
 
 # Modal options
 __C.GAN = edict()

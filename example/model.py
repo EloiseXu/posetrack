@@ -262,9 +262,12 @@ class D_NET64(nn.Module):
         self.img_code_s16 = encode_image_by_16times(ndf)
         if b_jcu:
             self.UNCOND_DNET = D_GET_LOGITS(ndf, nef, bcondition=False)
+            self.DOMAIN_DNET = D_GET_LOGITS(ndf, nef, bcondition=False)
         else:
             self.UNCOND_DNET = None
+            self.DOMAIN_DNET = None
         self.COND_DNET = D_GET_LOGITS(ndf, nef, bcondition=True)
+        self.DOMAIN = encode_image_by_16times(ndf)
 
     def forward(self, x_var):
         x_code4 = self.img_code_s16(x_var)

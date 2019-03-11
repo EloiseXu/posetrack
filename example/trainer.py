@@ -164,7 +164,9 @@ class condGANTrainer(object):
         end = time.time()
         bar = Bar('Eval ', max=len(self.val_loader))
         with torch.no_grad():
-            for i, (input, target, meta) in enumerate(self.val_loader):
+            for i, (input, target, meta, mpii) in enumerate(self.val_loader):
+                if mpii == False:
+                    continue
                 data_time.update(time.time() - end)
 
                 input = input.to(self.device, non_blocking=True)
@@ -264,7 +266,7 @@ class condGANTrainer(object):
         step = 0
         errD_total = None
         errG_total = None
-        for i, (input, target, meta) in enumerate(self.train_loader):
+        for i, (input, target, meta, mpii) in enumerate(self.train_loader):
             data_time.update(time.time() - end)
 
             ######################################################
@@ -286,7 +288,7 @@ class condGANTrainer(object):
             for i in range(self.num_stacks):
                 self.netsD[i].zero_grad()
                 errD = discriminator_loss(self.netsD[i], target, target_weight, output[i],
-                                          input, self.real_labels, self.fake_labels)
+                                          input, self.real_labels, self.fake_labels, mpii)
 
                 errD.backword()
                 self.optimizersD[i].step()
@@ -301,7 +303,7 @@ class condGANTrainer(object):
 
             self.netG.zero_grad()
             errG_total, G_logs = \
-                generator_loss(self.netsD, output, self.real_labels, input, target_weight)
+                generator_loss(self.netsD, output, self.real_labels, input, target_weight, mpii)
 
             if self.debug:
                 gt_batch_img = batch_with_heatmap(input, target)

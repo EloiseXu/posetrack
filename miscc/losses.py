@@ -1,8 +1,9 @@
 import torch
 import torch.nn as nn
+from miscc.config import cfg
 
 # ##################Loss for G and Ds##############################
-def discriminator_loss(netD, real_maps, masks, fake_maps, conditions, real_labels, fake_labels):
+def discriminator_loss(netD, real_maps, masks, fake_maps, conditions, real_labels, fake_labels, domain_labels):
     batch_size = fake_maps.size(0)
     num_joints = fake_maps.size(1)
 
@@ -26,13 +27,18 @@ def discriminator_loss(netD, real_maps, masks, fake_maps, conditions, real_label
         fake_logits = netD.UNCOND_DNET(fake_features)
         real_errD = nn.BCELoss()(real_logits, real_labels)
         fake_errD = nn.BCELoss(fake_logits, fake_labels)
+
+        domain_errD = 0
+        if cfg.TRAIN.DOMAIN == True:
+            domain_logits = netD.UNCOND_DNET(real_features)
+            domain_errD = nn.BCELoss()(domain_logits, domain_labels)
         errD = ((real_errD + cond_real_errD) / 2. +
-                (fake_errD + cond_wrong_errD) / 2.)
+                (fake_errD + cond_wrong_errD) / 2.) + domain_errD
     else:
         errD = cond_real_errD + cond_wrong_errD
     return errD
 
-def generator_loss(netsD, fake_maps, real_labels, img, masks):
+def generator_loss(netsD, fake_maps, real_labels, img, masks, mpii):
     numDs = len(netsD)
     logs = ''
 
@@ -54,6 +60,19 @@ def generator_loss(netsD, fake_maps, real_labels, img, masks):
         else:
             g_loss = cond_errG
         errG_total += g_loss
+
+        if cfg.TRAIN.DOMAIN == True:
+            domain_fake_map = []
+            real_domain_labels = []
+            for j in range(batch_size):
+                if mpii[j] == 0:
+                    continue
+                domain_fake_map.append(fake_maps[:, j])
+                real_domain_labels.append(mpii[j])
+            features = netsD[i].DOMAIN(domain_fake_map[i])
+            logits = netsD[i].DOMAIN_DNET(features)
+            errG_domain = nn.BCELoss()(logits, real_domain_labels)
+            errG_total += errG_domain
 
         logs += 'g_loss%d: %.2f ' % (i, g_loss.data[0])
 

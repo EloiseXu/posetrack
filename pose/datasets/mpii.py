@@ -38,7 +38,7 @@ class Mpii(data.Dataset):
                 self.train_list.append(idx)
 
         self.mpii_train_num = len(self.train_list)
-        self.mpii_val_num = len(self.valid_list)
+        self.mpii_val_num = len(self.val_list)
 
         self.lsp_img_folder = './data/lsp'
         self.h36m_jsonfile = './data/lsp/H36M_annotations.json'
@@ -46,9 +46,7 @@ class Mpii(data.Dataset):
             self.anno.extend(json.load(anno_file))
 
         for idx, val in enumerate(self.h36m_anno):
-            if val['isValidation'] == True:
-                self.valid_list.append(idx+self.mpii_val_num)
-            else:
+            if val['isValidation'] != True and len(self.train_list) < 2 * self.mpii_train_num:
                 self.train_list.append(idx+self.mpii_train_num)
 
         self.mean, self.std = self._compute_mean()

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="44fbb4dd-f6c5-4c3a-b0da-a3634db4d20d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/miscc/losses.py" beforeDir="false" afterPath="$PROJECT_DIR$/miscc/losses.py" afterDir="false" />
-    </list>
+    <list default="true" id="44fbb4dd-f6c5-4c3a-b0da-a3634db4d20d" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -200,16 +198,15 @@
       <workItem from="1552085985409" duration="135000" />
       <workItem from="1552086121802" duration="2430000" />
       <workItem from="1552140958342" duration="26802000" />
-      <workItem from="1552221520991" duration="11658000" />
+      <workItem from="1552221520991" duration="12098000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="41025000" />
+    <option name="totallyTimeSpent" value="41465000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="65" y="-4" width="1301" height="772" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.17848605" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />

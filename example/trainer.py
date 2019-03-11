@@ -3,6 +3,7 @@ import time
 import matplotlib.pyplot as plt
 
 import torch
+import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
 
@@ -42,7 +43,7 @@ class condGANTrainer(object):
         self.flip = args.flip
 
         print("==> creating model '{}', stacks={}, blocks={}".format(args.arch,args.stacks, args.blocks))
-        self.netG, self.netsD, self.start_epoch, self.best_acc, self.logger, self.optimizerG, self.optimizersD = \
+        self.netG, self.netsD, self.start_epoch, self.best_acc, self.logger, self.optimizerG, self.optimizersD, self.domainD = \
                                       self.build_models(num_stacks=args.stacks,
                                       num_blocks=args.blocks,
                                       num_classes=njoints,
@@ -63,6 +64,8 @@ class condGANTrainer(object):
                   resnet_layers=resnet_layers)
         for i in range(num_stacks):
             netsD.append(D_NET())
+        from model import D_DOMAIN
+        domainD = D_DOMAIN()
 
         netG = torch.nn.DataParallel(netG).to(device)
 
@@ -104,7 +107,7 @@ class condGANTrainer(object):
         if cfg.CUDA:
             for i in range(len(netsD)):
                 netsD[i].cuda()
-        return [netG, netsD, epoch, best_acc, logger, optimizerG, optimizersD]
+        return [netG, netsD, epoch, best_acc, logger, optimizerG, optimizersD, domainD]
 
     def define_optimizers(self, netG, netsD):
         optimizersD = []
@@ -236,6 +239,8 @@ class condGANTrainer(object):
 
         lr = cfg.TRAIN.GENERATOR_LR
         gen_iterations = 0
+        if cfg.TRAIN.DMAIN == True:
+            self.pre_train()
         for epoch in range(self.start_epoch, self.epochs):
             start_t = time.time()
             lr = adjust_learning_rate(self.optimizerG, epoch, lr, self.schedule, self.gamma)
@@ -252,6 +257,26 @@ class condGANTrainer(object):
         savefig(os.path.join(self.checkpoint, 'log.eps'))
 
         self.save_model(self.netsD, lr, self.epochs)
+
+    def pre_train(self):
+        domain_errD = 0
+        for epoch in range(self.epochs):
+            for i, (input, target, meta, mpii) in enumerate(self.train_loader):
+                input, target = input.to(self.device), target.to(self.device, non_blocking=True)
+                target_weight = meta['target_weight'].to(self.device, non_blocking = True)
+
+                batch_size = cfg.TRAIN.BATCH_SIZE
+                num_joints = cfg.TRAIN.NUM_JOINTS
+
+                for idx in range(num_joints):
+                    for i in range(batch_size):
+                        target[i, idx] = target[i, idx] * target_weight[i, idx, 0]
+
+                output = self.domainD(target)
+                domain_errD += nn.BCELoss()(output, mpii)
+
+        return domain_errD
+
 
     def train(self, gen_iterations, start_t, epoch, lr):
         batch_time = AverageMeter()
@@ -303,7 +328,7 @@ class condGANTrainer(object):
 
             self.netG.zero_grad()
             errG_total, G_logs = \
-                generator_loss(self.netsD, output, self.real_labels, input, target_weight, mpii)
+                generator_loss(self.netsD, self.domainD, output, self.real_labels, input, target_weight, mpii)
 
             if self.debug:
                 gt_batch_img = batch_with_heatmap(input, target)

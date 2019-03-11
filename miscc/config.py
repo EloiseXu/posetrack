@@ -19,6 +19,8 @@ __C.TRAIN.GENERATOR_LR = 2e-4
 __C.TRAIN.NET_G = ''
 __C.TRAIN.B_NET_D = True
 __C.TRAIN.DOMAIN = False
+__C.TRAIN.BATCH_SIZE = 6
+__C.TRAIN.NUM_JOINTS = 16
 
 # Modal options
 __C.GAN = edict()

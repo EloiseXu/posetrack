@@ -22,25 +22,19 @@ def discriminator_loss(netD, real_maps, masks, fake_maps, conditions, real_label
     cond_wrong_logits = netD.COND_DNET(real_features[:(batch_size - 1)], conditions[1:batch_size])
     cond_wrong_errD = nn.BCELoss()(cond_wrong_logits, fake_labels[1:batch_size])
 
-    real_features = netD.DOMAIN(real_maps)
-
     if netD.UNCOND_DNET is not None:
         real_logits = netD.UNCOND_DNET(real_features)
         fake_logits = netD.UNCOND_DNET(fake_features)
         real_errD = nn.BCELoss()(real_logits, real_labels)
         fake_errD = nn.BCELoss(fake_logits, fake_labels)
 
-        domain_errD = 0
-        if cfg.TRAIN.DOMAIN == True:
-            domain_logits = netD.DOMAIN_DNET(real_features)
-            domain_errD = nn.BCELoss()(domain_logits, domain_labels)
         errD = ((real_errD + cond_real_errD) / 2. +
-                (fake_errD + cond_wrong_errD) / 2.) + domain_errD
+                (fake_errD + cond_wrong_errD) / 2.)
     else:
         errD = cond_real_errD + cond_wrong_errD
     return errD
 
-def generator_loss(netsD, fake_maps, real_labels, img, masks, mpii):
+def generator_loss(netsD, domainD, fake_maps, real_labels, img, masks, mpii):
     numDs = len(netsD)
     logs = ''
 
@@ -71,8 +65,7 @@ def generator_loss(netsD, fake_maps, real_labels, img, masks, mpii):
                     continue
                 domain_fake_map.append(fake_maps[:, j])
                 real_domain_labels.append(mpii[j])
-            features = netsD[i].DOMAIN(domain_fake_map[i])
-            logits = netsD[i].DOMAIN_DNET(features)
+            logits = domainD(domain_fake_map[i])
             errG_domain = nn.BCELoss()(logits, real_domain_labels)
             errG_total += errG_domain
 
